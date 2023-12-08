@@ -1,0 +1,98 @@
+---
+title: "Class11: alphafold 2 analysis"
+author: "Aaron Liu A13908620"
+format: pdf
+---
+```{r}
+library(bio3d)
+```
+
+Here we post process and insepct our modeling from AlphFold2
+
+
+My results from AF live in the folder/directory `hivprdimer_23119`
+
+```{r}
+results_dir<-"hivprdimer_23119/"
+pdb_files<-list.files(results_dir, pattern=".pdb", full.names = T)
+```
+
+We first need to align and supperpose the PDB models and wecan use the `pdbaln` function for this:
+
+```{r}
+pdbs<-pdbaln(pdb_files, fit=T, exefile='msa')
+```
+##The RMSD matrix
+
+A common measure of structural dis-similarity is called RMSD
+
+```{r}
+rd<-rmsd(pdbs)
+rd
+```
+```{r}
+library(pheatmap)
+rownames(rd)<-paste0("m",1:5)
+colnames(rd)<-paste0("m",1:5)
+pheatmap(rd)
+
+```
+Let's view these in Mol*. Here we want the fitted coords
+```{r}
+xyz<-pdbfit(pdbs, outpath="fitted")
+```
+
+Focus on the most invariant part so the fitting and supperposiiton will fit well. 
+
+```{r}
+core<-core.find(pdbs)
+```
+
+```{r}
+core.inds<-core
+xyz<-pdbfit(pdbs, inds=core.inds, outpath="core_fitted")
+```
+
+To evaluate how good multi-chain or multi-domain models are we need to look at the PAE scores (predicted aligned error)
+
+
+They are output in the json file 
+```{r}
+pae_files<-list.files(results_dir, pattern="000.json", full.names=T)
+pae_files
+```
+```{r}
+library(jsonlite)
+pae1<-read_json(pae_files[1], simplifyVector=T)
+attributes(pae1)
+pae1$max_pae
+```
+
+```{r}
+pae5<-read_json(pae_files[5], simplifyVector=T)
+pae5$max_pae
+```
+```{r}
+plot.dmat(pae5$pae, 
+          xlab="Residue No.",
+          ylab="Residue No.", 
+          zlim=c(0,30))
+```
+
+
+```{r}
+plot.dmat(pae1$pae, 
+          xlab="Residue No.",
+          ylab="Residue No.", 
+            zlim=c(0,30))
+
+```
+
+
+##Main point
+
+We can run Alpha fold in google compute 
+We can read these results into R 
+
+
+

@@ -1,0 +1,78 @@
+---
+title: "Class 10"
+author: "Aaron Liu A13908620"
+format: html
+---
+
+##Comparative structure analysis of Adenylate Kinase
+
+We will use the `bio3` package
+We will also use the `mas` package from bioconductor
+First we need to install the `BiocManager` using `install.packages()`
+
+```{r}
+library(bio3d)
+
+```
+
+We use `BiocManager::install()` to install `msa`
+First we will pick a sequence of interest
+```{r}
+aa<-get.seq("1ake_A")
+aa
+```
+Search for all related structure
+
+```{r}
+#Please not run this again
+#b<-blast.pdb(aa)
+hits<-plot(b)
+```
+
+```{r}
+hits$pdb.id
+```
+>Side notes: save the results so we don't run blast again. 
+
+```{r}
+save(hits, b, file="blast_results.Rds")
+```
+
+```{r}
+load("blast_results.Rds")
+hits
+```
+
+Download all these related structures from the database with`get.pdb()`
+
+```{r}
+library(BiocManager)
+library(bio3d)
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+```
+Align and superpose structures
+```{r}
+pdbs<-pdbaln(files, fit=T, exefile="msa")
+```
+
+```{r}
+pdbs
+```
+##PCA
+
+We can do a PCA on the coordinate data i.e the `$xyz` values
+```{r}
+pc.xray<-pca(pdbs)
+plot(pc.xray)
+
+```
+```{r}
+dim(pdbs$xyz)
+```
+
+```{r}
+mktrj(pc.xray,file="pca_results.pdb")
+```
+
+
+

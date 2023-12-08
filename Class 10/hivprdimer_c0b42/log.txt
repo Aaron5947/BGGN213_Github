@@ -1,0 +1,18 @@
+2023-11-08 23:00:45,542 Unable to initialize backend 'rocm': NOT_FOUND: Could not find registered platform with name: "rocm". Available platform names are: CUDA
+2023-11-08 23:00:45,544 Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2023-11-08 23:00:48,480 Running on GPU
+2023-11-08 23:00:48,590 Found 4 citations for tools or databases
+2023-11-08 23:00:48,590 Query 1/1: hivprdimer_c0b42 (length 99)
+2023-11-08 23:00:49,217 Sleeping for 5s. Reason: PENDING
+2023-11-08 23:00:54,826 Sleeping for 8s. Reason: RUNNING
+2023-11-08 23:01:03,443 Sleeping for 10s. Reason: RUNNING
+2023-11-08 23:01:15,211 Could not get MSA/templates for hivprdimer_c0b42: invalid literal for int() with base 10: 'DUMMY'
+Traceback (most recent call last):
+  File "/content/colabfold/batch.py", line 1483, in run
+    = get_msa_and_templates(jobname, query_sequence, a3m_lines, result_dir, msa_mode, use_templates,
+  File "/content/colabfold/batch.py", line 844, in get_msa_and_templates
+    a3m_lines = run_mmseqs2(
+  File "/content/colabfold/colabfold.py", line 310, in run_mmseqs2
+    M = int(line[1:].rstrip())
+ValueError: invalid literal for int() with base 10: 'DUMMY'
+2023-11-08 23:01:15,212 Done
